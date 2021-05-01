@@ -10,25 +10,26 @@
 typedef struct TradeBank *PtrToGraph;
 typedef struct CurrIn *PtrToNext;
 typedef struct CurrOut *PtrToNext;
-typedef int ElemType;
+typedef char ElemType;
 
 struct TradeBank
 {
+    ElemType TradeBank[50];
     int NumVertex;       // Number of vertices in the graph
     PtrToNext *GraphPtr; // Ptr to each graph (tradebank).
 };
 
 struct CurrIn
 {
-    ElemType VertexID; // Name of the vertex
-    ElemType ConvRate; // Edge weight
+    ElemType VertexID[50]; // Name of the vertex
+    int ConvRate; // Edge weight
     PtrToNext Next;    // Pointer to Next Node
 };
 
 struct CurrOut
 {
-    ElemType VertexID; // Name of the vertex
-    ElemType ConvRate; // Edge weight
+    ElemType VertexID[50]; // Name of the vertex
+    int ConvRate; // Edge weight
     PtrToNext Next;    // Pointer to Next Node
 };
 
