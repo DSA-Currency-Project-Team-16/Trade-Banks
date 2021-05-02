@@ -20,10 +20,10 @@ struct TradeBank
 
 struct Node 
 {
-    ElemType VertexID[50];
-    int ConvRate;
-    PtrToNext Next;
-}
+    ElemType VertexID[50];  // Name of the vertex (currency)
+    int ConvRate;        // Edge weight (conversion rate)
+    PtrToNext Next;      // Pointer to next node 
+};
 
 struct AllGraph
 {
