@@ -19,19 +19,12 @@ struct TradeBank
     PtrToNext *GraphPtr; // Ptr to each graph (tradebank).
 };
 
-struct CurrIn
+struct Node 
 {
-    ElemType VertexID[50]; // Name of the vertex
-    int ConvRate; // Edge weight
-    PtrToNext Next;    // Pointer to Next Node
-};
-
-struct CurrOut
-{
-    ElemType VertexID[50]; // Name of the vertex
-    int ConvRate; // Edge weight
-    PtrToNext Next;    // Pointer to Next Node
-};
+    ElemType VertexID[50];
+    int ConvRate;
+    PtrToNext Next;
+}
 
 struct AllGraph
 {
