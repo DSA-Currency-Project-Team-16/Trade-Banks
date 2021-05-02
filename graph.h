@@ -8,8 +8,7 @@
 #define NOTVERTEX -1
 
 typedef struct TradeBank *PtrToGraph;
-typedef struct CurrIn *PtrToNext;
-typedef struct CurrOut *PtrToNext;
+typedef struct Node *PtrToNext;
 typedef char ElemType;
 
 struct TradeBank
