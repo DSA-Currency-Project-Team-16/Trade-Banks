@@ -15,7 +15,8 @@ struct TradeBank
 {
     ElemType TradeBank[50];
     int NumVertex;       // Number of vertices in the graph
-    PtrToNext *GraphPtr; // Ptr to each graph (tradebank).
+    PtrToNext *GraphIn; // Ptr to each graph (tradebank).
+    PtrToNext *GraphOut;
 };
 
 struct Node 
