@@ -11,8 +11,8 @@ the path using FreePath after you have finished*/
   time complexity of shortest path algorithm = (Number of tradebanks)*Dijkstra */
 
 #define STRLEN 50
-#define NULL_CHAR '\0'  //Null character
-#define TBLSIZE 200 //size of HashTable
+#define NULL_CHAR '\0' //Null character
+#define TBLSIZE 200    //size of HashTable
 
 typedef int DistType;               // Data type of distances
 typedef struct MinHeap *HeapPtr;    //Points to whole Heap
@@ -27,7 +27,7 @@ struct HeapNode
 };
 
 typedef struct path *PathPtr;
-struct path         //linked list 
+struct path //linked list
 {
     ElemType CurrID[STRLEN];
     PathPtr Next;
@@ -50,17 +50,25 @@ bool IsEmptyHeap(HeapPtr Heap);
 HeapPtr InitHeap(PtrToNext *AdjList, int NumVertices, int HtSize, ElemType Source[]);
 void DecreaseKey(HeapPtr Heap, int index, DistType NewWt);
 
+DistType FindDist(HeapPtr Heap, int startID, int DestID);
+PathPtr FindPath(HeapPtr Heap, ElemType Source[], ElemType Dest[], PathPtr Path);
 PathPtr PrintPath(HeapPtr Heap, ElemType Source[], ElemType Dest[], PathPtr Path);
 void PrintDist(HeapPtr Heap, int StartID, int DestID);
+
 HeapPtr swap(HeapPtr Heap, int index1, int index2);
 int GetHash(ElemType Vertex[]); //returns index of the Vertex
-PtrToNext Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int NumVertices, bool flag, long long *MinDist);
+PtrToNext Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int NumVertices, int flag, long long *MinDist);
+//if flag == 1, prints the shortest path & dist, if flag == -1, finds the shortest path & dist but doesn't print it, else(flag = 0), finds dist(updates MinDist).
+void ShortestPath(struct AllGraph *Pointer, ElemType Source[], ElemType Dest[]);
 
-PtrToNext Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int NumVertices, bool flag, long long *MinDist)
+PtrToNext Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int NumVertices, int flag, long long *MinDist)
 {
     //Dijkstra Heap implementation code
     HeapPtr Heap = InitHeap(AdjList, NumVertices, NumVertices, Source);
-    int startID = GetHash(Source); //index of source in HashTable
+    int startID = 0;
+    while (strcmp(Heap->arr[startID]->VertexID, Source) != 0) //goes to the source vertex
+        startID++;
+
     int count = Heap->Pos[startID];
 
     DecreaseKey(Heap, count, 0);
@@ -84,9 +92,10 @@ PtrToNext Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int N
         }
     }
 
-    if(flag == true)
+    PathPtr Path = NULL;
+
+    if (flag == 1)
     {
-        PathPtr Path = NULL;
         Path = PrintPath(Heap, Source, Dest, Path);
         PrintDist(Heap, startID, GetHash(Dest));
         FreeHeap(Heap, NumVertices);
@@ -94,24 +103,34 @@ PtrToNext Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int N
         return Path;
     }
 
-    if( Heap->arr[Heap->Pos[GetHash(Dest)]] < *MinDist )
+    else if (flag == -1)
+    {
+        Path = FindPath(Heap, Source, Dest, Path);
+        *MinDist = FindDist(Heap, Source, GetHash(Dest));
+        FreeHeap(Heap, NumVertices);
+
+        return Path;
+    }
+
+    //if flag == 0
+    if (Heap->arr[Heap->Pos[GetHash(Dest)]] < *MinDist)
         *MinDist = Heap->arr[Heap->Pos[GetHash(Dest)]];
 
     FreeHeap(Heap, NumVertices);
-    return NULL;
+    return Path;
 }
 
 void ShortestPath(struct AllGraph *Pointer, ElemType Source[], ElemType Dest[])
 {
-    PtrToGraph CurrBank = Pointer->GraphPtr;    //points to current tradebank
-    DistType MinDist = 20*INFTY + 5, temp;
+    PtrToGraph CurrBank = Pointer->GraphPtr; //points to current tradebank
+    DistType MinDist = 20 * INFTY + 5, temp;
     temp = MinDist;
     ElemType BankName[STRLEN] = {'\0'};
 
-    while( CurrBank != NULL )
+    while (CurrBank != NULL)
     {
-        Dijkstra( CurrBank->GraphIn, Source, Dest, CurrBank->NumVertex, false, &MinDist);
-        if( temp != MinDist)    //meaning that mindist was updated
+        Dijkstra(CurrBank->GraphIn, Source, Dest, CurrBank->NumVertex, 0, &MinDist);
+        if (temp != MinDist) //meaning that mindist was updated
         {
             strcmp(BankName, CurrBank->TradeBank);
             temp = MinDist;
@@ -121,11 +140,11 @@ void ShortestPath(struct AllGraph *Pointer, ElemType Source[], ElemType Dest[])
     }
 
     CurrBank = Pointer->GraphPtr;
-    while( strcmp(CurrBank->TradeBank, BankName) ) //traversing the list of tradebanks
+    while (strcmp(CurrBank->TradeBank, BankName)) //traversing the list of tradebanks
         CurrBank = CurrBank->Next;
 
     //Prints shortest path and shortest path distance
-    Dijkstra( CurrBank->GraphIn, Source, Dest, CurrBank->NumVertex, true, &MinDist);   
+    Dijkstra(CurrBank->GraphIn, Source, Dest, CurrBank->NumVertex, 1, &MinDist);
 }
 
 //////////////////////////////////Heap operations
@@ -262,7 +281,6 @@ void FreeHeap(HeapPtr Heap, int NumVertices)
 
 ///////////////////////////////////////////////////////
 
-
 PathPtr AddPath(PathPtr Path, ElemType Vertex[])
 {
     PathPtr tmp = (PathPtr)malloc(sizeof(struct path));
@@ -287,8 +305,8 @@ PathPtr AddPath(PathPtr Path, ElemType Vertex[])
 void FreePath(PathPtr Path)
 {
     PathPtr curr = Path;
-    
-    while( Path != NULL )
+
+    while (Path != NULL)
     {
         Path = Path->Next;
         free(curr);
@@ -299,7 +317,7 @@ void FreePath(PathPtr Path)
 PathPtr PrintPath(HeapPtr Heap, ElemType Source[], ElemType Dest[], PathPtr Path)
 {
     int index = GetHash(Dest);
-    while (strcmp(Dest, Source) ) // if the vertex is not the same as source
+    while (strcmp(Dest, Source)) // if the vertex is not the same as source
         PrintPath(Heap, Source, Heap->arr[index]->PrevID, Path);
 
     printf("%s ->", Dest);
@@ -310,7 +328,24 @@ PathPtr PrintPath(HeapPtr Heap, ElemType Source[], ElemType Dest[], PathPtr Path
 
 void PrintDist(HeapPtr Heap, int startID, int DestID)
 {
-    printf("Shortest Distance = %d\n", Heap->arr[Heap->Pos[DestID]]);
+    printf("Shortest Distance = %d\n", Heap->arr[Heap->Pos[DestID]]->Dist); //If DistType is changed,the type specifier
+                                                                            //Must also be  changed
+}
+
+PathPtr FindPath(HeapPtr Heap, ElemType Source[], ElemType Dest[], PathPtr Path)
+{
+    int index = GetHash(Dest);
+    while (strcmp(Dest, Source)) // if the vertex is not the same as source
+        PrintPath(Heap, Source, Heap->arr[index]->PrevID, Path);
+
+    Path = AddPath(Path, Dest); //adding of node to LList
+
+    return Path;
+}
+
+DistType FindDist(HeapPtr Heap, int startID, int DestID)
+{
+    return (Heap->arr[Heap->Pos[DestID]]->Dist);
 }
 
 /*check for segfault around line 119, in the while loops for shortest path*/
