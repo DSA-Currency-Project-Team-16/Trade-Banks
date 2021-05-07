@@ -170,6 +170,10 @@ void delete_currency(ElemType VertexID[50], struct AllGraph list) // deletes the
             temp3 = NULL;
             free(temp3);
         }
+        if(temp.Next != NULL||temp2.Next != NULL)
+        {
+            list.GraphPtr[i]->NumVertex--;
+        }
     }
     if(c==0)
     {
