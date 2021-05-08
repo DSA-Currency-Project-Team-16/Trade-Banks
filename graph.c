@@ -154,50 +154,50 @@ void InsertEdge(ElemType TradeBank[50], ElemType C1[50], ElemType C2[50], int Co
     }
 }
 
-void PrintGraph(AllGraph list)
-{
-    while (list.GraphPtr)
-    {
-        printf("TradeBank: %s\n", list.GraphPtr->TradeBank);
+// void PrintGraph(AllGraph list)
+// {
+//     while (list.GraphPtr)
+//     {
+//         printf("TradeBank: %s\n", list.GraphPtr->TradeBank);
 
-        for (int i = 0; i < tablesize; i++)
-        {
-            if (list.GraphPtr->GraphIn[i]->VertexID[0] != '\0')
-            {
-                printf("Currency: %s(%d) ", list.GraphPtr->GraphIn[i]->VertexID, list.GraphPtr->GraphIn[i]->ConvRate);
-                // printf("Currency: %s ", list.GraphPtr->GraphIn[i]->VertexID);
-                Node *temp = list.GraphPtr->GraphIn[i]->Next;
-                while (temp)
-                {
-                    printf("%s(%d) ", temp->VertexID, temp->ConvRate);
-                    temp = temp->Next;
-                }
-                printf("\n");
-                free(temp);
-            }
-        }
-        printf("\n");
+//         for (int i = 0; i < tablesize; i++)
+//         {
+//             if (list.GraphPtr->GraphIn[i]->VertexID[0] != '\0')
+//             {
+//                 printf("Currency: %s(%d) ", list.GraphPtr->GraphIn[i]->VertexID, list.GraphPtr->GraphIn[i]->ConvRate);
+//                 // printf("Currency: %s ", list.GraphPtr->GraphIn[i]->VertexID);
+//                 Node *temp = list.GraphPtr->GraphIn[i]->Next;
+//                 while (temp)
+//                 {
+//                     printf("%s(%d) ", temp->VertexID, temp->ConvRate);
+//                     temp = temp->Next;
+//                 }
+//                 printf("\n");
+//                 free(temp);
+//             }
+//         }
+//         printf("\n");
 
-        for (int i = 0; i < tablesize; i++)
-        {
-            if (list.GraphPtr->GraphOut[i]->VertexID[0] != '\0')
-            {
-                // printf("Currency: %s ", list.GraphPtr->GraphOut[i]->VertexID);
-                printf("Currency: %s(%d) ", list.GraphPtr->GraphIn[i]->VertexID, list.GraphPtr->GraphIn[i]->ConvRate);
-                Node *temp = list.GraphPtr->GraphOut[i]->Next;
-                while (temp)
-                {
-                    printf("%s(%d) ", temp->VertexID, temp->ConvRate);
-                    temp = temp->Next;
-                }
-                free(temp);
-                printf("\n");
-            }
-        }
-        printf("\n");
+//         for (int i = 0; i < tablesize; i++)
+//         {
+//             if (list.GraphPtr->GraphOut[i]->VertexID[0] != '\0')
+//             {
+//                 // printf("Currency: %s ", list.GraphPtr->GraphOut[i]->VertexID);
+//                 printf("Currency: %s(%d) ", list.GraphPtr->GraphIn[i]->VertexID, list.GraphPtr->GraphIn[i]->ConvRate);
+//                 Node *temp = list.GraphPtr->GraphOut[i]->Next;
+//                 while (temp)
+//                 {
+//                     printf("%s(%d) ", temp->VertexID, temp->ConvRate);
+//                     temp = temp->Next;
+//                 }
+//                 free(temp);
+//                 printf("\n");
+//             }
+//         }
+//         printf("\n");
 
-        list.GraphPtr = list.GraphPtr->Next;
+//         list.GraphPtr = list.GraphPtr->Next;
 
-        printf("\n");
-    }
-}
+//         printf("\n");
+//     }
+// }
