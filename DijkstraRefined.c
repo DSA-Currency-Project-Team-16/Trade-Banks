@@ -66,16 +66,29 @@ PtrToNext Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int N
     //Dijkstra Heap implementation code
     HeapPtr Heap = InitHeap(AdjList, NumVertices, NumVertices, Source);
     int startID = 0;
-    while (strcmp(Heap->arr[startID]->VertexID, Source) != 0) //goes to the source vertex
+    while (startID < TBLSIZE && strcmp(Heap->arr[startID]->VertexID, Source) != 0) //goes to the source vertex
         startID++;
 
+    if (startID >= TBLSIZE) //Source Vertex Not found
+    {
+        if (flag == -1)
+            *MinDist = 20 * INFTY + 5;
+
+        else if (flag == 1)
+            printf("The source currency(A) does not exist\n");
+
+        //if flag == 0, does nothing
+
+        return NULL;
+    }
     int count = Heap->Pos[startID];
 
     DecreaseKey(Heap, count, 0);
+    HeapNdPtr Vertex = NULL;
 
     while (!IsEmptyHeap(Heap))
     {
-        HeapNdPtr Vertex = ExtractMin(Heap);
+        Vertex = ExtractMin(Heap);
         if (strcmp(Vertex->VertexID, Dest) == 0) // Dest = name of currency we were looking for
             break;
 
@@ -90,6 +103,22 @@ PtrToNext Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int N
 
             Curr = Curr->Next;
         }
+    }
+
+    if (IsEmptyHeap) //if Heap is empty, 2 chances, either the last vertex extracted was Dest/Dest isn't in the TradeBank
+    {
+        if (strcmp(Dest, Vertex->VertexID) != 0)
+        {
+            if (flag == 1)
+                printf("The currency B does not exist\n");
+
+            else if (flag == -1)
+                *MinDist = 20*INFTY + 5;    //meaning that the dest vertex doesn't exist
+            
+            // flag = 0, do  nothing
+
+            return NULL;
+        }       
     }
 
     PathPtr Path = NULL;
