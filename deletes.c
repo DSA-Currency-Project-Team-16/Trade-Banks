@@ -99,12 +99,13 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
     PtrToGraph temp = list->GraphPtr;
     while (temp != NULL)
     {
+
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
-        {
-            int key = hash_fun(origin);
-            Node *temp1 = temp->GraphIn[key]->Next;
+        { 
+            int key1 = hash_fun(origin);
+            Node *temp1 = temp->GraphIn[key1];
             Node *prev1, *prev2;
-            while (strcmp(temp1->VertexID, destiny) != 0) // checks whether matches to given VertexID or not
+            while (strcmp(temp1->VertexID, destiny) != 0 && temp1 != NULL) // checks whether matches to given VertexID or not
             {
                 c = 1;
                 prev1 = temp1;
@@ -121,10 +122,10 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
             }
             prev1->Next = prev2;
 
-            int key = hash_fun(destiny);
-            Node *temp2 = temp->GraphOut[key]->Next;
+            int key2 = hash_fun(destiny);
+            Node *temp2 = temp->GraphOut[key2];
             Node *prev, *prev3;
-            while (strcmp(temp2->VertexID, origin) != 0)
+            while (strcmp(temp2->VertexID, origin) != 0 && temp2 != NULL)
             {
                 c = 1;
                 prev = temp2;
