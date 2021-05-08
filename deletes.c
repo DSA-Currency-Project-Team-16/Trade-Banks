@@ -12,8 +12,8 @@ struct TradeBank // stores all details of a TradeBank
 {
     ElemType TradeBank[50]; // name of the TradeBank
     int NumVertex;          // Number of vertices in the graph
-    PtrToNext *GraphIn;          //  adjecency list  with considering in edges
-    PtrToNext *GraphOut;         //  adjecency list  with considering out edges
+    PtrToNext *GraphIn;     //  adjecency list  with considering in edges
+    PtrToNext *GraphOut;    //  adjecency list  with considering out edges
     PtrToGraph Next;        // list of Ptr's to each node of graph (tradebank).
 };
 
@@ -30,9 +30,9 @@ struct AllGraph
     PtrToGraph GraphPtr; // pointer to list of trade banks
 };
 int hash_fun(char string[50]);
-PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType destiny[50], struct AllGraph *list, int flag) ;
+PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType destiny[50], struct AllGraph *list, int flag);
 void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list);
-void delete_currency(ElemType VertexID[50], struct AllGraph *list);
+void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGraph *list);
 
 int hash_fun(char string[50]) //  gives a hash key to find in which the edges are stored ( adjecency list)
 {
@@ -52,20 +52,20 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes 
     // {
     PtrToGraph temp = list->GraphPtr;
     PtrToGraph prev = temp;
-    while (temp->Next != NULL)
+    while (temp != NULL)
     {
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
         {
             c = 1;
-            Node *t1 = temp->GraphIn;
+            Node *t1 = temp->GraphIn[0];
             while (t1->Next != NULL)
             {
-                delete_currency(t1->VertexID, list); // deletes the  adjecency list we made for GraphIn  in edges
+                delete_currency(temp->TradeBank, t1->VertexID, list); // deletes the  adjecency list we made for GraphIn  in edges
             }
-            Node *t2 = temp->GraphOut;
+            Node *t2 = temp->GraphOut[0];
             while (t2->Next != NULL)
             {
-                delete_currency(t2->VertexID, list); // deletes the  adjecency list we made for GraphOut  in edges
+                delete_currency(temp->TradeBank, t2->VertexID, list); // deletes the  adjecency list we made for GraphOut  in edges
             }
             prev->Next = temp->Next;
             free(temp); // clears the entire trade bank
@@ -85,7 +85,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
     int n = list->NumBanks;
     int c = 0;
     PtrToGraph temp = list->GraphPtr;
-    while (temp->Next != NULL)
+    while (temp != NULL)
     {
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
         {
@@ -101,11 +101,11 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
             prev2 = temp1->Next;
             if (flag == 1)
             {
-                return temp1;          // as deleted edge is required  in 2nd shortes path this had done to made when required
+                return temp1; // as deleted edge is required  in 2nd shortes path this had done to made when required
             }
             if (flag == 0)
             {
-                free(temp1);                          // clears the particular edge in GraphIn
+                free(temp1); // clears the particular edge in GraphIn
             }
             prev1->Next = prev2;
 
@@ -129,63 +129,67 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
         printf(" There is no edge in this TradeBank b/w given vertices \n ");
     }
 }
-void delete_currency(ElemType VertexID[50], struct AllGraph *list) // deletes the nodes(currencies)  along with all the edges connected to them
+void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGraph *list) // deletes the nodes(currencies)  along with all the edges connected to them
 {
     int n = list->NumBanks;
     int c = 0;
     int key = hash_fun(VertexID);
 
     PtrToGraph tem = list->GraphPtr;
-    while (tem->Next != NULL)
+    while (strcmp(tem->TradeBank, TradeBank) != 0)
     {
-        Node *temp = tem->GraphIn[key];
-        if (temp->Next != NULL)
-        {
-            c = 1;
-            Node *temp1 = temp->Next;
-            while (temp->Next != NULL)
-            {
-                int key1 = hash_fun(temp->Next->VertexID);
-                Node *t = tem->GraphOut[key1];
-                while (t->Next != NULL)
-                {
-                    if (strcmp(t->Next->VertexID, VertexID) == 0)
-                    {
-                        Node* te = t->Next->Next;
-                        free(t->Next);             //  clears side connected edges in GraphOut  which can be find through connections in GraphIn
-                        t->Next = t->Next->Next;
-                        break;
-                    }
-                }
-            }
-            temp1 = NULL;
-            free(temp1); // clears edges directed inwards
-        }
-        Node *temp2 = tem->GraphOut[key];
-        if (temp2->Next != NULL)
-        {
-            c = 1;
-            Node *temp3 = temp2->Next;
-            while (temp2->Next != NULL)
-            {
-                int key1 = hash_fun(temp2->Next->VertexID);
-                Node *t = tem->GraphIn[key1];
-                while (t->Next != NULL)
-                {
-                    if (strcmp(t->Next->VertexID, VertexID) == 0)
-                    {
-                        Node* te = t->Next->Next;
-                        free(t->Next);            //  clears side connected edges in GraphIn  which can be find through connections in GraphOut
-                        t->Next = t->Next->Next;
-                        break;
-                    }
-                }
-            }
-            temp3 = NULL;
-            free(temp3); // clears edges directed outwards
-        }
         tem = tem->Next;
     }
+    // while (tem != NULL)
+    // {
+    Node *temp = tem->GraphIn[key];
+    if (temp->Next != NULL)
+    {
+        c = 1;
+        Node *temp1 = temp->Next;
+        while (temp->Next != NULL)
+        {
+            int key1 = hash_fun(temp->Next->VertexID);
+            Node *t = tem->GraphOut[key1];
+            while (t->Next != NULL)
+            {
+                if (strcmp(t->Next->VertexID, VertexID) == 0)
+                {
+                    Node *te = t->Next->Next;
+                    free(t->Next); //  clears side connected edges in GraphOut  which can be find through connections in GraphIn
+                    t->Next = t->Next->Next;
+                    break;
+                }
+            }
+        }
+        temp1 = NULL;
+        free(temp1); // clears edges directed inwards
+    }
+    Node *temp2 = tem->GraphOut[key];
+    if (temp2->Next != NULL)
+    {
+        c = 1;
+        Node *temp3 = temp2->Next;
+        while (temp2->Next != NULL)
+        {
+            int key1 = hash_fun(temp2->Next->VertexID);
+            Node *t = tem->GraphIn[key1];
+            while (t->Next != NULL)
+            {
+                if (strcmp(t->Next->VertexID, VertexID) == 0)
+                {
+                    Node *te = t->Next->Next;
+                    free(t->Next); //  clears side connected edges in GraphIn  which can be find through connections in GraphOut
+                    t->Next = t->Next->Next;
+                    break;
+                }
+            }
+        }
+        temp3 = NULL;
+        free(temp3); // clears edges directed outwards
+    }
+    // tem = tem->Next;
+    // }
     if (c == 0)
     {
         printf(" There is no currency of this name in any TradeBank  \n ");
