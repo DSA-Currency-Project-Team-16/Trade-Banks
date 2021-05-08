@@ -29,6 +29,12 @@ struct AllGraph
     int NumBanks;        // number of trade banks present
     PtrToGraph GraphPtr; // pointer to list of trade banks
 };
+
+int hash_fun(char string[50]);
+PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType destiny[50], struct AllGraph list, int flag) ;
+void delete_TradeBank(ElemType TradeBank[50], struct AllGraph list);
+void delete_currency(ElemType VertexID[50], struct AllGraph list);
+
 int hash_fun(char string[50]) //  gives a hash key to find in which the edges are stored ( adjecency list)
 {
     int sum = 0;
