@@ -48,7 +48,7 @@ void ShortestPath(struct AllGraph *Pointer, ElemType Source[], ElemType Dest[]);
 
 PathPtr AddPath(PathPtr Path, ElemType Vertex[]);
 void FreePath(PathPtr Path);
-long long Second_Shortest_Path_Of_Graph(PtrToGraph TradeBank, char *Currency1, char *Currency2, int ShortestPathLength, TradeBankListPtr ListOfTradeBanks);
+PathPtr Second_Shortest_Path_Of_Graph(PtrToGraph TradeBank, char *Currency1, char *Currency2, long long ShortestPathLength,long long* SecondShortestCost,TradeBankListPtr ListOfTradeBanks);
 long long Second_Shortest_Conversion(TradeBankListPtr ListOfTradeBanks, char *Currency1, char *Currency2);
 PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType destiny[50], struct AllGraph list, int flag);
 void InsertEdge(ElemType TradeBank[50], ElemType C1[50], ElemType C2[50], int ConvRate, TradeBankListPtr list);
@@ -58,7 +58,8 @@ void print_existing_path(PathPtr P)
 {
     while(P != NULL)
     {
-        printf("%s -> "P->CurrID)
+        printf("%s -> ",P->CurrID);
+        P = P->Next;
     }
     printf("\n");
 }
@@ -66,7 +67,7 @@ void print_existing_path(PathPtr P)
 //Returns the second shortest path between currency1 and currency2 for a particular TradeBank
 //Algorithm has a time complexity of O(x*(E + V)*logV) where x is the number of edges in shortest path
 //Worst case O(V * (E + V) * logV)
-PathPtr Second_Shortest_Path_Of_Graph(PtrToGraph TradeBank, char *Currency1, char *Currency2, int ShortestPathLength,int* SecondShortestCost,TradeBankListPtr ListOfTradeBanks)
+PathPtr Second_Shortest_Path_Of_Graph(PtrToGraph TradeBank, char *Currency1, char *Currency2, long long ShortestPathLength,long long* SecondShortestCost,TradeBankListPtr ListOfTradeBanks)
 {
     long long cost = INFTY;
     long long mincost = INFTY;
@@ -173,6 +174,7 @@ long long Second_Shortest_Conversion(TradeBankListPtr ListOfTradeBanks, char *Cu
             if(SecondMinGraphPath != NULL)
             {
                 FinalSecondMinGraphPath = SecondMinGraphPath;
+                SecondMinTradeBank = StartMinTradeBank;
             }
         }
 
@@ -182,12 +184,14 @@ long long Second_Shortest_Conversion(TradeBankListPtr ListOfTradeBanks, char *Cu
     }
     if(FinalSecondMinGraphPath != NULL)
     {
+        printf("Second Shortest distance = %lld\n",SecondShortestCost);
         print_existing_path(FinalSecondMinGraphPath);
         FreePath(FinalSecondMinGraphPath);
     }
     else
     {
-        Dijkstra(T->GraphIn, Currency1, Currency2 , T->NumVertex , 1 , INFTY);
+        printf("Second ");
+        ShortestPathLength = INFTY;
+        Dijkstra(SecondMinTradeBank->GraphIn, Currency1, Currency2 , SecondMinTradeBank->NumVertex , 1 ,&ShortestPathLength);
     }
-    printf("Conversion from %s to %s second lowest cost = %lld through Trade Bank - %s", Currency1, Currency2, SecondShortestCost, SecondMinTradeBank->TradeBank);
 }
