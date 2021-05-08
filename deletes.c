@@ -84,7 +84,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
     {
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
         {
-            int key = hash_fun(origin[50]);
+            int key = hash_fun(origin);
             Node *temp1 = temp->GraphIn[key]->Next;
             Node *prev1, *prev2;
             while (strcmp(temp1->VertexID, destiny) != 0) // checks whether matches to given VertexID or not
@@ -104,7 +104,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
             }
             prev1->Next = prev2;
 
-            int key = hash_fun(destiny[50]);
+            int key = hash_fun(destiny);
             Node *temp2 = temp->GraphOut[key]->Next;
             Node *prev, *prev3;
             while (strcmp(temp2->VertexID, origin) != 0)
@@ -128,7 +128,7 @@ void delete_currency(ElemType VertexID[50], struct AllGraph list) // deletes the
 {
     int n = list.NumBanks;
     int c = 0;
-    int key = hash_fun(VertexID[50]);
+    int key = hash_fun(VertexID);
 
     PtrToGraph tem = list.GraphPtr;
     while (tem->Next != NULL)
@@ -140,11 +140,11 @@ void delete_currency(ElemType VertexID[50], struct AllGraph list) // deletes the
             Node *temp1 = temp->Next;
             while (temp->Next != NULL)
             {
-                int key1 = hash_fun(temp->Next->VertexID[50]);
+                int key1 = hash_fun(temp->Next->VertexID);
                 Node *t = tem->GraphOut[key1];
                 while (t->Next != NULL)
                 {
-                    if (strcmp(t->Next->VertexID[50], VertexID[50]) == 0)
+                    if (strcmp(t->Next->VertexID, VertexID) == 0)
                     {
                         Node* te = t->Next->Next;
                         free(t->Next);             //  clears side connected edges in GraphOut  which can be find through connections in GraphIn
@@ -163,11 +163,11 @@ void delete_currency(ElemType VertexID[50], struct AllGraph list) // deletes the
             Node *temp3 = temp2->Next;
             while (temp2->Next != NULL)
             {
-                int key1 = hash_fun(temp2->Next->VertexID[50]);
+                int key1 = hash_fun(temp2->Next->VertexID);
                 Node *t = tem->GraphIn[key1];
                 while (t->Next != NULL)
                 {
-                    if (strcmp(t->Next->VertexID[50], VertexID[50]) == 0)
+                    if (strcmp(t->Next->VertexID, VertexID) == 0)
                     {
                         Node* te = t->Next->Next;
                         free(t->Next);            //  clears side connected edges in GraphIn  which can be find through connections in GraphOut
