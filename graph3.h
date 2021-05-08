@@ -1,7 +1,7 @@
 #ifndef _GRAPH_
 #define _GRAPH_
 
-#define tablesize 20
+#define tablesize 207
 
 typedef char ElemType;
 typedef struct TradeBank *PtrToGraph;
