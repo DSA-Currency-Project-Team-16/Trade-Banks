@@ -160,7 +160,9 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
                     t->Next = t->Next->Next;
                     break;
                 }
+                t=t->Next;
             }
+            temp = temp->Next;
         }
         temp1 = NULL;
         free(temp1); // clears edges directed inwards
@@ -183,7 +185,9 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
                     t->Next = t->Next->Next;
                     break;
                 }
+                t=t->Next;
             }
+            temp2=temp2->Next;
         }
         temp3 = NULL;
         free(temp3); // clears edges directed outwards
