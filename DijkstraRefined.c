@@ -116,7 +116,7 @@ PtrToNext Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int N
                 *MinDist = 20*INFTY + 5;    //meaning that the dest vertex doesn't exist
             
             // flag = 0, do  nothing
-
+            FreeHeap(Heap, NumVertices);
             return NULL;
         }       
     }
