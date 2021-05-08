@@ -48,8 +48,6 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes 
 {
     int n = list->NumBanks;
     int c = 0;
-    // for (int i = 0; i < n; i++)
-    // {
     PtrToGraph temp = list->GraphPtr;
     PtrToGraph prev = temp;
     while (temp != NULL)
@@ -57,15 +55,29 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes 
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
         {
             c = 1;
-            Node *t1 = temp->GraphIn[0];
-            while (t1->Next != NULL)
+            for (int i = 0; i < tablesize; i++)
             {
-                delete_currency(temp->TradeBank, t1->VertexID, list); // deletes the  adjecency list we made for GraphIn  in edges
+                Node *t1 = temp->GraphIn[i], *next;
+                while (t1 != NULL)
+                {
+                    
+                    next = t1->Next;
+                    free(t1);
+                    t1 = next;
+                }
+                
+                Node *t2 = temp->GraphOut[i],*next1;
+                 while (t2 != NULL)
+                {
+                    next1 = t2->Next;
+                    free(t2);
+                    t2 = next1;
+                }
             }
-            Node *t2 = temp->GraphOut[0];
-            while (t2->Next != NULL)
+            if(temp == prev)
             {
-                delete_currency(temp->TradeBank, t2->VertexID, list); // deletes the  adjecency list we made for GraphOut  in edges
+                list->GraphPtr=temp->Next;
+                break;
             }
             prev->Next = temp->Next;
             free(temp); // clears the entire trade bank
