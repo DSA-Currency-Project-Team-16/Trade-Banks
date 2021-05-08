@@ -101,7 +101,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
     {
 
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
-        { 
+        {
             int key1 = hash_fun(origin);
             Node *temp1 = temp->GraphIn[key1];
             Node *prev1, *prev2;
