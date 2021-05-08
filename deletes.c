@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define tablesize 2003
+#define tablesize 307
 
 typedef struct TradeBank *PtrToGraph;
 typedef struct Node *PtrToNext;
@@ -29,11 +29,10 @@ struct AllGraph
     int NumBanks;        // number of trade banks present
     PtrToGraph GraphPtr; // pointer to list of trade banks
 };
-
 int hash_fun(char string[50]);
-PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType destiny[50], struct AllGraph list, int flag) ;
-void delete_TradeBank(ElemType TradeBank[50], struct AllGraph list);
-void delete_currency(ElemType VertexID[50], struct AllGraph list);
+PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType destiny[50], struct AllGraph *list, int flag) ;
+void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list);
+void delete_currency(ElemType VertexID[50], struct AllGraph *list);
 
 int hash_fun(char string[50]) //  gives a hash key to find in which the edges are stored ( adjecency list)
 {
@@ -41,17 +40,17 @@ int hash_fun(char string[50]) //  gives a hash key to find in which the edges ar
     int l = strlen(string);
     for (int i = 0; i < l; i++)
     {
-        sum = (sum * 37 + string[i]) % tablesize;
+        sum = (sum * 33 + string[i]) % tablesize;
     }
     return sum % tablesize;
 }
-void delete_TradeBank(ElemType TradeBank[50], struct AllGraph list) // deletes a TradeBank
+void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes a TradeBank
 {
-    int n = list.NumBanks;
+    int n = list->NumBanks;
     int c = 0;
     // for (int i = 0; i < n; i++)
     // {
-    PtrToGraph temp = list.GraphPtr;
+    PtrToGraph temp = list->GraphPtr;
     PtrToGraph prev = temp;
     while (temp->Next != NULL)
     {
@@ -70,7 +69,7 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph list) // deletes a
             }
             prev->Next = temp->Next;
             free(temp); // clears the entire trade bank
-            list.NumBanks = list.NumBanks - 1;
+            list->NumBanks = list->NumBanks - 1;
             break;
         }
         prev = temp;
@@ -81,11 +80,11 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph list) // deletes a
         printf(" There is no TradeBank with this name \n ");
     }
 }
-PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType destiny[50], struct AllGraph list, int flag) //delete a currency conversion from a specified Trade Bank
+PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType destiny[50], struct AllGraph *list, int flag) //delete a currency conversion from a specified Trade Bank
 {
-    int n = list.NumBanks;
+    int n = list->NumBanks;
     int c = 0;
-    PtrToGraph temp = list.GraphPtr;
+    PtrToGraph temp = list->GraphPtr;
     while (temp->Next != NULL)
     {
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
@@ -130,13 +129,13 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
         printf(" There is no edge in this TradeBank b/w given vertices \n ");
     }
 }
-void delete_currency(ElemType VertexID[50], struct AllGraph list) // deletes the nodes(currencies)  along with all the edges connected to them
+void delete_currency(ElemType VertexID[50], struct AllGraph *list) // deletes the nodes(currencies)  along with all the edges connected to them
 {
-    int n = list.NumBanks;
+    int n = list->NumBanks;
     int c = 0;
     int key = hash_fun(VertexID);
 
-    PtrToGraph tem = list.GraphPtr;
+    PtrToGraph tem = list->GraphPtr;
     while (tem->Next != NULL)
     {
         Node *temp = tem->GraphIn[key];
