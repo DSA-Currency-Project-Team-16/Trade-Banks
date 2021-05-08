@@ -32,14 +32,14 @@ struct AllGraph
 };
 typedef struct AllGraph AllGraph;
 
-TradeBank *CreateGraph(int numVertex, ElemType *TradeBank);
+PtrToGraph CreateGraph(int numVertex, ElemType *TradeBank);
 PtrToNext CreateNode(ElemType VertexID[50]);
 
 void InsertNode(ElemType TradeBank[50], ElemType VertexID[50], AllGraph *list);
 
 void InsertEdge(ElemType TradeBank[50], ElemType C1[50], ElemType C2[50], int ConvRate, AllGraph *list);
 
-void PrintGraph(AllGraph list);
+// void PrintGraph(AllGraph list);
 void AddGraph(ElemType TradeBank[50], int numVertex, AllGraph *list);
 
 #endif
