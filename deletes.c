@@ -147,9 +147,10 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
 {
     int n = list->NumBanks;
     int c = 0;
-    int key = hash_fun(VertexID);
-
     PtrToGraph tem = list->GraphPtr;
+
+    int key = hash_search(VertexID, tem->GraphIn);
+
     while (strcmp(tem->TradeBank, TradeBank) != 0)
     {
         tem = tem->Next;
@@ -157,13 +158,14 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
     // while (tem != NULL)
     // {
     Node *temp = tem->GraphIn[key];
-    if (temp->Next != NULL)
+    if (temp != NULL)
     {
         c = 1;
-        Node *temp1 = temp->Next;
-        while (temp->Next != NULL)
+        Node *temp1 = temp;
+        Node *tempo = temp->Next, *next;
+        while (temp != NULL)
         {
-            int key1 = hash_fun(temp->Next->VertexID);
+            int key1 = hash_search(temp->VertexID, tem->GraphIn);
             Node *t = tem->GraphOut[key1];
             while (t->Next != NULL)
             {
@@ -171,24 +173,34 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
                 {
                     Node *te = t->Next->Next;
                     free(t->Next); //  clears side connected edges in GraphOut  which can be find through connections in GraphIn
-                    t->Next = t->Next->Next;
+                    t->Next = te;
                     break;
                 }
-                t=t->Next;
+                t = t->Next;
             }
+            // tempo = temp;
             temp = temp->Next;
         }
-        temp1 = NULL;
-        free(temp1); // clears edges directed inwards
+        while (tempo != NULL)
+        {
+            next = tempo->Next;
+            free(tempo);
+            tempo = next;
+        }
+        // free(tempo);
+        // free(temp1); // clears edges directed inwards
+        tem->GraphIn[key]->Next = NULL;
+        free(tem->GraphIn[key]);
     }
     Node *temp2 = tem->GraphOut[key];
     if (temp2->Next != NULL)
     {
         c = 1;
-        Node *temp3 = temp2->Next;
-        while (temp2->Next != NULL)
+        Node *temp3 = temp2;
+        Node *tempo = temp2->Next, *next;
+        while (temp2 != NULL)
         {
-            int key1 = hash_fun(temp2->Next->VertexID);
+            int key1 = hash_search(temp2->VertexID, tem->GraphOut);
             Node *t = tem->GraphIn[key1];
             while (t->Next != NULL)
             {
@@ -196,20 +208,30 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
                 {
                     Node *te = t->Next->Next;
                     free(t->Next); //  clears side connected edges in GraphIn  which can be find through connections in GraphOut
-                    t->Next = t->Next->Next;
+                    t->Next = te;
                     break;
                 }
-                t=t->Next;
+                t = t->Next;
             }
-            temp2=temp2->Next;
+
+            temp2 = temp2->Next;
         }
-        temp3 = NULL;
-        free(temp3); // clears edges directed outwards
+        while (tempo != NULL)
+        {
+            next = tempo->Next;
+            free(tempo);
+            tempo = next;
+        }
+        // free(tempo);
+        // free(temp3); // clears edges directed outwards
+        tem->GraphOut[key]->Next = NULL;
+        free(tem->GraphOut[key]);
     }
-    // tem = tem->Next;
-    // }
+    
     if (c == 0)
     {
         printf(" There is no currency of this name in any TradeBank  \n ");
     }
+    else
+        list->GraphPtr->NumVertex--;
 }
