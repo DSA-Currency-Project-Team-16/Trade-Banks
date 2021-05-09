@@ -4,44 +4,43 @@
 #include <stdio.h>
 #define y 33
 
-int hash_fun(ElemType string[50])   
-{                                                 
-    int sum = 0;                                   
-    int l = strlen(string);                        
-    for (int i = 0; i < l; i++)      
-    {                                             
+int hash_fun(ElemType string[50])
+{
+    int sum = 0;
+    int l = strlen(string);
+    for (int i = 0; i < l; i++)
+    {
         sum = (sum * y + string[i]) % tablesize;
     }
     return sum % tablesize;
 }
 
-PtrToNext CreateNode(ElemType VertexID[50])   
-{                                             
+PtrToNext CreateNode(ElemType VertexID[50])
+{
     Node *N = malloc(sizeof(Node));
     strcpy(N->VertexID, VertexID);
     N->Next = NULL;
     return N;
 }
 
-void AddGraph(ElemType TradeBank[50], int NumVertex, AllGraph *list)    
-{                
+void AddGraph(ElemType TradeBank[50], int NumVertex, AllGraph *list)
+{
     PtrToGraph B = CreateGraph(NumVertex, TradeBank);
     B->Next = list->GraphPtr;
     list->GraphPtr = B;
     list->NumBanks++;
 }
- 
-PtrToGraph CreateGraph(int NumVertex, ElemType TradeBank[50])  
-{                           
-    PtrToGraph B = (PtrToGraph)malloc(sizeof(struct TradeBank));        
-    B->GraphIn = (PtrToNext*)malloc(sizeof(Node*) * tablesize);   
-    B->GraphOut = (PtrToNext*)malloc(sizeof(Node*) * tablesize);
+
+PtrToGraph CreateGraph(int NumVertex, ElemType TradeBank[50])
+{
+    PtrToGraph B = (PtrToGraph)malloc(sizeof(struct TradeBank));
+    B->GraphIn = (PtrToNext *)malloc(sizeof(Node *) * tablesize);
+    B->GraphOut = (PtrToNext *)malloc(sizeof(Node *) * tablesize);
     strcpy(B->TradeBank, TradeBank);
-    B->NumVertex = NumVertex;
+    B->NumVertex = 0;
     B->Next = NULL;
 
-
-    for (int i = 0; i < tablesize; i++)   
+    for (int i = 0; i < tablesize; i++)
     {
         B->GraphIn[i] = (PtrToNext)malloc(sizeof(Node));
         B->GraphOut[i] = (PtrToNext)malloc(sizeof(Node));
@@ -65,22 +64,14 @@ void InsertNode(ElemType TradeBank[50], ElemType VertexID[50], AllGraph *list)
 
             int key = hash_fun(VertexID);
 
-            while (temp->GraphPtr->GraphIn[key]->Next)
+            while (temp->GraphPtr->GraphIn[key]->ConvRate == 0)
             {
-                if (key == temp->GraphPtr->NumVertex - 1)
+                if (key == tablesize - 1)
                     key = 0;
                 else
                     key++;
             }
             strcpy(temp->GraphPtr->GraphIn[key]->VertexID, VertexID);
-
-            while (temp->GraphPtr->GraphOut[key]->Next)
-            {
-                if (key == temp->GraphPtr->NumVertex - 1)
-                    key = 0;
-                else
-                    key++;
-            }
             strcpy(temp->GraphPtr->GraphOut[key]->VertexID, VertexID);
 
             temp->GraphPtr->GraphIn[key]->ConvRate = 0;
@@ -91,6 +82,24 @@ void InsertNode(ElemType TradeBank[50], ElemType VertexID[50], AllGraph *list)
         }
 
         temp->GraphPtr = temp->GraphPtr->Next;
+    }
+}
+
+int hash_search(ElemType string[50], PtrToNext *G)
+{
+    int key = hash_fun(string);
+    if (strcmp(G[key]->VertexID, string) == 0)
+        return key;
+    else
+    {
+        while (G[key]->ConvRate == 0)
+        {
+            if ((strcmp(G[key]->VertexID, string) == 0))
+                return key;
+            key++;
+            key = key % tablesize;
+        }
+        return -1;
     }
 }
 
@@ -108,41 +117,18 @@ void InsertEdge(ElemType TradeBank[50], ElemType C1[50], ElemType C2[50], int Co
             PtrToNext nodeOut = CreateNode(C1);
             nodeOut->ConvRate = ConvRate;
 
-            int key1 = hash_fun(C1);
-            if(temp->GraphPtr->GraphIn[key1]->ConvRate == -1) {
+            int key1 = hash_search(C1, temp->GraphPtr->GraphIn);
+            if (key1 == -1)
                 printf("INVALID OPERATION!!\n");
-                return;
-            }
-            int key2 = hash_fun(C2);
-            if(temp->GraphPtr->GraphOut[key2]->ConvRate == -1) {
-                printf("INVALID OPERATION!!\n");
-                return;
-            }
 
-            // printf("-----------------\n");
-
-            // PtrToNext tempIn = temp->GraphPtr->GraphIn[key1]->Next;
-            // while(tempIn) {
-            //     if(strcmp(tempIn->VertexID, C2) == 0) {
-            //         printf("Edge already exists!!\n");
-            //         return;
-            //     }
-            //     tempIn = tempIn->Next;
-            // }
-
-            // PtrToNext tempOut = temp->GraphPtr->GraphOut[key2]->Next;
-            // while(tempOut) {
-            //     if(strcmp(tempIn->VertexID, C1) == 0) {
-            //         printf("Edge already exists!!\n");
-            //         return;
-            //     }
-            //     tempOut = tempOut->Next;
-            // }
+            int key2 = hash_search(C2, temp->GraphPtr->GraphOut);
+            if (key2 == -1)
+                printf("INVALID OPERATION!!\n");    
 
             nodeIn->Next = temp->GraphPtr->GraphIn[key1]->Next;
             temp->GraphPtr->GraphIn[key1]->Next = nodeIn;
             temp->GraphPtr->GraphIn[key1]->ConvRate = 0;
-            
+
             nodeOut->Next = temp->GraphPtr->GraphOut[key2]->Next;
             temp->GraphPtr->GraphOut[key2]->Next = nodeOut;
             temp->GraphPtr->GraphOut[key2]->ConvRate = 0;
@@ -158,7 +144,7 @@ void InsertEdge(ElemType TradeBank[50], ElemType C1[50], ElemType C2[50], int Co
 // {
 //     while (list.GraphPtr)
 //     {
-//         printf("TradeBank: %s\n", list.GraphPtr->TradeBank);
+//         printf("TradeBank: %s NumVertex: %d\n", list.GraphPtr->TradeBank, list.GraphPtr->NumVertex);
 
 //         for (int i = 0; i < tablesize; i++)
 //         {
