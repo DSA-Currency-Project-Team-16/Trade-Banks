@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #define tablesize 307
 
 typedef struct TradeBank *PtrToGraph;
@@ -15,6 +16,7 @@ struct TradeBank // stores all details of a TradeBank
     PtrToNext *GraphIn;     //  adjecency list  with considering in edges
     PtrToNext *GraphOut;    //  adjecency list  with considering out edges
     PtrToGraph Next;        // list of Ptr's to each node of graph (tradebank).
+    bool *check;
 };
 
 struct Node // stores details of Vertex (currency)
