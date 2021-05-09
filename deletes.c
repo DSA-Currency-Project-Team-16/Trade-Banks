@@ -87,6 +87,8 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes 
                 }
                 // free(next1);
             }
+            free(temp->GraphIn);
+            free(temp->GraphOut);
             if (temp == prev)
             {
                 list->GraphPtr = temp->Next;
