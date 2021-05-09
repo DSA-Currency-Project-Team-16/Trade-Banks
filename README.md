@@ -1,5 +1,5 @@
-This project, in addition to the header file and the .c files, has a list of 1000(maximum capacity) tradebanks in a file called tradebanks.txt     
-and 200(maximum capcacity) currencies in currency.txt.   
+This project, in addition to the header file and the .c files, has a list of 1000(maximum capacity) tradebanks in a file called tradebanks.txt(?)     
+and 200(maximum capcacity) currencies in currency.txt(?).   
 
 Constraint: No. of characters name of the bank and currency should not exceed 49.   
 
@@ -24,7 +24,7 @@ If we press 4, the program prompts user to enter the name of tradebank and delet
 If we press 5, the program prompts the user for the names of the tradebank and the currency and deletes the currency from the tradebank.  
 If we press 6, the program asks user to enter the tradebank and the source and destination currency.  
 On pressing 7, the program asks us to enter the tradebank name and checks if there is a cycle in the graph or not.  
-Upon pressing 8, the program asks the user.....................................................................................!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+Upon pressing 8, the program asks the user.......(????)..............................................................!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
 Upon pressing 9, the program asks the user to input the currencies A and B in that order. Then, it finds the shortest path from A to B among all  
 graphs and prints the path.  
 Upon pressing 10, the program prompts the user to enter edgeweight, tradebank, and the currencies and adds the edge to the graph.  
