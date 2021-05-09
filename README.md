@@ -1,5 +1,5 @@
-This project, in addition to the header file and the .c files, has a list of 1000(maximum capacity) tradebanks in a file called tradebanks.txt(?)     
-and 200(maximum capcacity) currencies in currency.txt(?).   
+This project, in addition to the header file and the .c files, has a list of 1000(maximum capacity) tradebanks in a file called tradebanks.txt    
+and 200(maximum capcacity) currencies in currency.txt.   
 
 Constraint: No. of characters name of the bank and currency should not exceed 49.   
 
