@@ -230,7 +230,7 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
     
     if (c == 0)
     {
-        printf(" There is no currency of this name in any TradeBank  \n ");
+        printf(" There is no currency of this name in selected TradeBank  \n ");
     }
     else
         list->GraphPtr->NumVertex--;
