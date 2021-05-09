@@ -119,11 +119,20 @@ void InsertEdge(ElemType TradeBank[50], ElemType C1[50], ElemType C2[50], int Co
 
             int key1 = hash_search(C1, temp->GraphPtr->GraphIn);
             if (key1 == -1)
-                printf("INVALID OPERATION!!\n");
+                printf("INVALID OPERATION !!\n\n");
 
             int key2 = hash_search(C2, temp->GraphPtr->GraphOut);
             if (key2 == -1)
-                printf("INVALID OPERATION!!\n");    
+                printf("INVALID OPERATION !!\n\n");    
+
+            PtrToNext t1 = temp->GraphPtr->GraphIn[key1]->Next;
+            while(t1) {
+                if(strcmp(t1->VertexID, C2) == 0) {
+                    printf("Edge already exists !!\n\n");
+                    return;
+                }
+                t1 = t1->Next;
+            }    
 
             nodeIn->Next = temp->GraphPtr->GraphIn[key1]->Next;
             temp->GraphPtr->GraphIn[key1]->Next = nodeIn;
