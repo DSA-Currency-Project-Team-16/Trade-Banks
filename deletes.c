@@ -54,6 +54,7 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes 
     {
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
         {
+            free(temp->check);
             c = 1;
             for (int i = 0; i < tablesize; i++)
             {
