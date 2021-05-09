@@ -63,23 +63,25 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes 
                 Node *t1 = temp->GraphIn[i], *next;
                 while (t1 != NULL)
                 {
-                    
+
                     next = t1->Next;
                     free(t1);
                     t1 = next;
                 }
-                
-                Node *t2 = temp->GraphOut[i],*next1;
-                 while (t2 != NULL)
+                // free(next);
+
+                Node *t2 = temp->GraphOut[i], *next1;
+                while (t2 != NULL)
                 {
                     next1 = t2->Next;
                     free(t2);
                     t2 = next1;
                 }
+                // free(next1);
             }
-            if(temp == prev)
+            if (temp == prev)
             {
-                list->GraphPtr=temp->Next;
+                list->GraphPtr = temp->Next;
                 break;
             }
             prev->Next = temp->Next;
@@ -105,38 +107,43 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
 
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
         {
-            int key1 = hash_fun(origin);
-            Node *temp1 = temp->GraphIn[key1];
-            Node *prev1, *prev2;
-            while (strcmp(temp1->VertexID, destiny) != 0 && temp1 != NULL) // checks whether matches to given VertexID or not
+            int key1 = hash_search(origin, temp->GraphIn);
+            if (key1 != -1)
             {
-                c = 1;
-                prev1 = temp1;
-                temp1 = temp1->Next;
+                Node *temp1 = temp->GraphIn[key1];
+                Node *prev1, *prev2;
+                while (strcmp(temp1->VertexID, destiny) != 0 && temp1 != NULL) // checks whether matches to given VertexID or not
+                {
+                    c = 1;
+                    prev1 = temp1;
+                    temp1 = temp1->Next;
+                }
+                prev2 = temp1->Next;
+                if (flag == 1)
+                {
+                    return temp1; // as deleted edge is required  in 2nd shortes path this had done to made when required
+                }
+                if (flag == 0)
+                {
+                    free(temp1); // clears the particular edge in GraphIn
+                }
+                prev1->Next = prev2;
             }
-            prev2 = temp1->Next;
-            if (flag == 1)
+            int key2 = hash_search(destiny, temp->GraphOut);
+            if (key2 != -1)
             {
-                return temp1; // as deleted edge is required  in 2nd shortes path this had done to made when required
+                Node *temp2 = temp->GraphOut[key2];
+                Node *prev, *prev3;
+                while (strcmp(temp2->VertexID, origin) != 0 && temp2 != NULL)
+                {
+                    c = 1;
+                    prev = temp2;
+                    temp2 = temp2->Next;
+                }
+                prev3 = temp2->Next;
+                free(temp2); // clears the particular edge in GraphOut
+                prev->Next = prev3;
             }
-            if (flag == 0)
-            {
-                free(temp1); // clears the particular edge in GraphIn
-            }
-            prev1->Next = prev2;
-
-            int key2 = hash_fun(destiny);
-            Node *temp2 = temp->GraphOut[key2];
-            Node *prev, *prev3;
-            while (strcmp(temp2->VertexID, origin) != 0 && temp2 != NULL)
-            {
-                c = 1;
-                prev = temp2;
-                temp2 = temp2->Next;
-            }
-            prev2 = temp2->Next;
-            free(temp2); // clears the particular edge in GraphOut
-            prev->Next = prev3;
         }
         temp = temp->Next;
     }
@@ -151,96 +158,100 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
     int c = 0;
     PtrToGraph tem = list->GraphPtr;
 
-
     while (strcmp(tem->TradeBank, TradeBank) != 0 && tem->Next != NULL)
     {
         tem = tem->Next;
     }
     int key = hash_search(VertexID, tem->GraphIn);
-    
-    Node *temp = tem->GraphIn[key];
-    printf("   %d\n",key);
-    if (temp != NULL)
+    if (key != -1)
     {
-        c = 1;
-        Node *temp1 = temp;
-        Node *tempo = temp, *next;
-        while (temp != NULL)
+        Node *temp = tem->GraphIn[key];
+        printf("   %d\n", key);
+        if (temp != NULL)
         {
-            int key1 = hash_search(temp->VertexID, tem->GraphIn);
-
-            Node *t = tem->GraphOut[key1];
-            while (t->Next != NULL)
+            c = 1;
+            Node *temp1 = temp;
+            Node *tempo = temp, *next;
+            while (temp != NULL)
             {
-                if (strcmp(t->Next->VertexID, VertexID) == 0)
+                int key1 = hash_search(temp->VertexID, tem->GraphIn);
+                if (key1 != -1)
                 {
-                    Node *te = t->Next->Next;
-                    free(t->Next); //  clears side connected edges in GraphOut  which can be find through connections in GraphIn
-                    t->Next = te;
-                    break;
+                    Node *t = tem->GraphOut[key1];
+                    while (t->Next != NULL)
+                    {
+                        if (strcmp(t->Next->VertexID, VertexID) == 0)
+                        {
+                            Node *te = t->Next->Next;
+                            free(t->Next); //  clears side connected edges in GraphOut  which can be find through connections in GraphIn
+                            t->Next = te;
+                            break;
+                        }
+                        t = t->Next;
+                    }
                 }
-                t = t->Next;
+                temp = temp->Next;
             }
-            temp = temp->Next;
-        }
-        if (tempo->Next != NULL)
-        {
-            tempo = tempo->Next;
-            while (tempo != NULL)
+            if (tempo->Next != NULL)
             {
-                next = tempo->Next;
-                free(tempo);
-                tempo = next;
-            }
-        }
-        tem->GraphIn[key]->Next = NULL;
-        tem->GraphIn[key]->VertexID[0] = '\0';
-        tem->GraphIn[key]->ConvRate = -2; // these indicates that the node is deleted
-    }
-    Node *temp2 = tem->GraphOut[key];
-    if (temp2->Next != NULL)
-    {
-        c = 1;
-        Node *temp3 = temp2;
-        Node *tempo = temp2, *next;
-        while (temp2 != NULL)
-        {
-            int key1 = hash_search(temp2->VertexID, tem->GraphOut);
-            Node *t = tem->GraphIn[key1];
-            while (t->Next != NULL)
-            {
-                if (strcmp(t->Next->VertexID, VertexID) == 0)
+                tempo = tempo->Next;
+                while (tempo != NULL)
                 {
-                    Node *te = t->Next->Next;
-                    free(t->Next); //  clears side connected edges in GraphIn  which can be find through connections in GraphOut
-                    t->Next = te;
-                    break;
+                    next = tempo->Next;
+                    free(tempo);
+                    tempo = next;
                 }
-                t = t->Next;
             }
-
-            temp2 = temp2->Next;
+            tem->GraphIn[key]->Next = NULL;
+            tem->GraphIn[key]->VertexID[0] = '\0';
+            tem->GraphIn[key]->ConvRate = -2; // these indicates that the node is deleted
         }
-        if (tempo->Next != NULL)
+        Node *temp2 = tem->GraphOut[key];
+        if (temp2->Next != NULL)
         {
-            tempo = tempo->Next;
-            while (tempo != NULL)
+            c = 1;
+            Node *temp3 = temp2;
+            Node *tempo = temp2, *next;
+            while (temp2 != NULL)
             {
-                next = tempo->Next;
-                free(tempo);
-                tempo = next;
+                int key1 = hash_search(temp2->VertexID, tem->GraphOut);
+                if (key1 != -1)
+                {
+                    Node *t = tem->GraphIn[key1];
+                    while (t->Next != NULL)
+                    {
+                        if (strcmp(t->Next->VertexID, VertexID) == 0)
+                        {
+                            Node *te = t->Next->Next;
+                            free(t->Next); //  clears side connected edges in GraphIn  which can be find through connections in GraphOut
+                            t->Next = te;
+                            break;
+                        }
+                        t = t->Next;
+                    }
+                }
+                temp2 = temp2->Next;
             }
+            if (tempo->Next != NULL)
+            {
+                tempo = tempo->Next;
+                while (tempo != NULL)
+                {
+                    next = tempo->Next;
+                    free(tempo);
+                    tempo = next;
+                }
+            }
+            tem->GraphOut[key]->Next = NULL;
+            tem->GraphOut[key]->VertexID[0] = '\0';
+            tem->GraphOut[key]->ConvRate = -2; // these indicates that the node is deleted
         }
-        tem->GraphOut[key]->Next = NULL;
-        tem->GraphOut[key]->VertexID[0] = '\0';
-        tem->GraphOut[key]->ConvRate = -2; // these indicates that the node is deleted
     }
-
     if (c == 0)
     {
         printf(" There is no currency of this name in any TradeBank  \n ");
     }
-    else
+    else if (c == 1)
     {
         tem->NumVertex--;
     }
