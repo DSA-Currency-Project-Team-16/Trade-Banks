@@ -66,12 +66,11 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes 
         {
             free(temp->check);
             c = 1;
-            for (int i = 0; i < tablesize; i++)
+            for (int i = 0; i < tablesize; i++)          // iterates through entire hash table
             {
                 Node *t1 = temp->GraphIn[i], *next;
-                while (t1 != NULL)
+                while (t1 != NULL)                      // loop which frees each edge connected to vertices in GraphIn
                 {
-
                     next = t1->Next;
                     free(t1);
                     t1 = next;
@@ -79,7 +78,7 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes 
                 // free(next);
 
                 Node *t2 = temp->GraphOut[i], *next1;
-                while (t2 != NULL)
+                while (t2 != NULL)                      // loop which frees each edge connected to vertices in GraphOut
                 {
                     next1 = t2->Next;
                     free(t2);
@@ -87,22 +86,22 @@ void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes 
                 }
                 // free(next1);
             }
-            free(temp->GraphIn);
-            free(temp->GraphOut);
+            free(temp->GraphIn);                        // free's the hashIn table
+            free(temp->GraphOut);                       // frees's the hashOut table
             if (temp == prev)
             {
-                list->GraphPtr = temp->Next;
+                list->GraphPtr = temp->Next;            // if Trade Bank is present in the 1st position of linked list of Trade Bank's
                 break;
             }
             prev->Next = temp->Next;
-            free(temp); // clears the entire trade bank
-            list->NumBanks = list->NumBanks - 1;
+            free(temp);                                 // clears the entire trade bank
+            list->NumBanks = list->NumBanks - 1;        // deduces count of Trade Bank's
             break;
         }
         prev = temp;
         temp = temp->Next;
-    }
-    if (c == 0)
+    } 
+    if (c == 0)                   // c becomes 1 when it went through the code if it not went then there might be no bank with provided name in linked list of banks
     {
         printf(" There is no TradeBank with this name \n ");
     }
@@ -114,10 +113,10 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
     PtrToGraph temp = list->GraphPtr;
     while (temp != NULL)
     {
-        if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
+        if (strcmp(temp->TradeBank, TradeBank) == 0)           // checks whether matches to given TradeBank or not
         {
             int key2 = hash_search(destiny, temp->GraphOut);
-            if (key2 == -1)
+            if (key2 == -1)                                    // if destiny not found in hash table
             {
                 printf("Edge does not exist!\n");
                 return NULL;
@@ -126,21 +125,21 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
             {
                 Node *temp2 = temp->GraphOut[key2];
                 Node *prev, *prev3;
-                while (strcmp(temp2->VertexID, origin) != 0 && temp2 != NULL)
+                while (strcmp(temp2->VertexID, origin) != 0 && temp2 != NULL)   // iterates till matches to origin
                 {
                     c = 1;
                     prev = temp2;
                     temp2 = temp2->Next;
                 }
-                if (strcmp(temp2->VertexID, origin) == 0)
+                if (strcmp(temp2->VertexID, origin) == 0)          
                 {
                     prev3 = temp2->Next;
-                    free(temp2); // clears the particular edge in GraphOut
+                    free(temp2);                                               // clears the particular edge in GraphOut
                     prev->Next = prev3;
                 }
             }
             int key1 = hash_search(origin, temp->GraphIn);
-            if (key1 == -1)
+            if (key1 == -1)                                                     // if origin not found in hash table
             {
                 printf("Edge does not exist!\n");
                 return NULL;
@@ -149,7 +148,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
             {
                 Node *temp1 = temp->GraphIn[key1];
                 Node *prev1, *prev2;
-                while (temp1 != NULL && strcmp(temp1->VertexID, destiny) != 0) // checks whether matches to given VertexID or not
+                while (temp1 != NULL && strcmp(temp1->VertexID, destiny) != 0) // checks whether matches to given VertexID or not // iterates till matches to destiny
                 {
                     c = 1;
                     prev1 = temp1;
@@ -164,7 +163,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
                 {
                     prev2 = temp1->Next;
                     prev1->Next = prev2;
-                    if (flag == 1)
+                    if (flag == 1)                                 // this is used here as it was required in the 2 nd shortest path finding
                     {
                         return temp1; // as deleted edge is required  in 2nd shortes path this had done to made when required
                     }
@@ -185,7 +184,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
         }
         temp = temp->Next;
     }
-    if (c == 0)
+    if (c == 0)// c becomes 1 when it went through the code if it not went then there might be no edge with provided name in that Trade Bank
     {
         printf(" There is no edge in this TradeBank b/w given vertices \n ");
     }
@@ -197,12 +196,12 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
     int c = 0;
     PtrToGraph tem = list->GraphPtr;
 
-    while (strcmp(tem->TradeBank, TradeBank) != 0 && tem->Next != NULL)
+    while (strcmp(tem->TradeBank, TradeBank) != 0 && tem->Next != NULL)  // iterates till we get required bank
     {
         tem = tem->Next;
     }
     int key = hash_search(VertexID, tem->GraphIn);
-    if (key != -1)
+    if (key != -1)                                  // if required VertexID is not found 
     {
         Node *temp = tem->GraphIn[key];
         if (temp != NULL)
@@ -210,13 +209,13 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
             c = 1;
             Node *temp1 = temp;
             Node *tempo = temp, *next;
-            while (temp != NULL)
+            while (temp != NULL)                  
             {
                 int key1 = hash_search(temp->VertexID, tem->GraphIn);
                 if (key1 != -1)
                 {
                     Node *t = tem->GraphOut[key1];
-                    while (t->Next != NULL)
+                    while (t->Next != NULL)           //  if a edge is present in GraphIn then it will present in reverse in the GraphOut to remove that too 
                     {
                         if (strcmp(t->Next->VertexID, VertexID) == 0)
                         {
@@ -233,7 +232,7 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
             if (tempo->Next != NULL)
             {
                 tempo = tempo->Next;
-                while (tempo != NULL)
+                while (tempo != NULL)  // to free up each and every edge block so that their exist's no memory leaks
                 {
                     next = tempo->Next;
                     free(tempo);
@@ -257,7 +256,7 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
                 if (key1 != -1)
                 {
                     Node *t = tem->GraphIn[key1];
-                    while (t->Next != NULL)
+                    while (t->Next != NULL)       //  if a edge is present in GraphOut then it will present in reverse in the GraphIn to remove that too
                     {
                         if (strcmp(t->Next->VertexID, VertexID) == 0)
                         {
@@ -274,7 +273,7 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
             if (tempo->Next != NULL)
             {
                 tempo = tempo->Next;
-                while (tempo != NULL)
+                while (tempo != NULL) // to free up each and every edge block so that their exist's no memory leaks
                 {
                     next = tempo->Next;
                     free(tempo);
