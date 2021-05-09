@@ -240,10 +240,11 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
                     tempo = next;
                 }
             }
-            tem->GraphIn[key]->Next = NULL;
-            tem->GraphIn[key]->VertexID[0] = '\0';
-            tem->GraphIn[key]->ConvRate = -2; // these indicates that the node is deleted
+            
         }
+        tem->GraphIn[key]->Next = NULL;
+        tem->GraphIn[key]->VertexID[0] = '\0';
+        tem->GraphIn[key]->ConvRate = -2; // these indicates that the node is deleted
         Node *temp2 = tem->GraphOut[key];
         if (temp2->Next != NULL)
         {
@@ -280,10 +281,11 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
                     tempo = next;
                 }
             }
-            tem->GraphOut[key]->Next = NULL;
-            tem->GraphOut[key]->VertexID[0] = '\0';
-            tem->GraphOut[key]->ConvRate = -2; // these indicates that the node is deleted
+            
         }
+        tem->GraphOut[key]->Next = NULL;
+        tem->GraphOut[key]->VertexID[0] = '\0';
+        tem->GraphOut[key]->ConvRate = -2; // these indicates that the node is deleted
     }
     if (c == 0)
     {
