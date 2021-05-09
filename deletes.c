@@ -112,9 +112,31 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
     PtrToGraph temp = list->GraphPtr;
     while (temp != NULL)
     {
-
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
         {
+            int key2 = hash_search(destiny, temp->GraphOut);
+            if (key2 == -1)
+            {
+                printf("Edge does not exist!\n");
+                return NULL;
+            }
+            else if (key2 != -1)
+            {
+                Node *temp2 = temp->GraphOut[key2];
+                Node *prev, *prev3;
+                while (strcmp(temp2->VertexID, origin) != 0 && temp2 != NULL)
+                {
+                    c = 1;
+                    prev = temp2;
+                    temp2 = temp2->Next;
+                }
+                if (strcmp(temp2->VertexID, origin) == 0)
+                {
+                    prev3 = temp2->Next;
+                    free(temp2); // clears the particular edge in GraphOut
+                    prev->Next = prev3;
+                }
+            }
             int key1 = hash_search(origin, temp->GraphIn);
             if (key1 == -1)
             {
@@ -139,6 +161,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
                 else if (strcmp(temp1->VertexID, destiny) == 0)
                 {
                     prev2 = temp1->Next;
+                    prev1->Next = prev2;
                     if (flag == 1)
                     {
                         return temp1; // as deleted edge is required  in 2nd shortes path this had done to made when required
@@ -147,7 +170,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
                     {
                         free(temp1); // clears the particular edge in GraphIn
                     }
-                    prev1->Next = prev2;
+                    
                 }
                 else
                 {
@@ -155,29 +178,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
                     return NULL;
                 }
             }
-            int key2 = hash_search(destiny, temp->GraphOut);
-            if (key2 == -1)
-            {
-                printf("Edge does not exist!\n");
-                return NULL;
-            }
-            else if (key2 != -1)
-            {
-                Node *temp2 = temp->GraphOut[key2];
-                Node *prev, *prev3;
-                while (strcmp(temp2->VertexID, origin) != 0 && temp2 != NULL)
-                {
-                    c = 1;
-                    prev = temp2;
-                    temp2 = temp2->Next;
-                }
-                if (strcmp(temp2->VertexID, origin) == 0)
-                {
-                    prev3 = temp2->Next;
-                    free(temp2); // clears the particular edge in GraphOut
-                    prev->Next = prev3;
-                }
-            }
+            
             break;
         }
         temp = temp->Next;
