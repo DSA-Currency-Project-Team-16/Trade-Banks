@@ -31,20 +31,28 @@ struct AllGraph
     int NumBanks;        // number of trade banks present
     PtrToGraph GraphPtr; // pointer to list of trade banks
 };
-int hash_fun(char string[50]);
+int hash_search(ElemType string[50], PtrToNext *G);
 PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType destiny[50], struct AllGraph *list, int flag);
 void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list);
 void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGraph *list);
 
-int hash_fun(char string[50]) //  gives a hash key to find in which the edges are stored ( adjecency list)
+int hash_search(ElemType string[50], PtrToNext *G)
 {
-    int sum = 0;
-    int l = strlen(string);
-    for (int i = 0; i < l; i++)
+    int key = hash_fun(string);
+    if (strcmp(G[key]->VertexID, string) == 0)
+        return key;
+    else
     {
-        sum = (sum * 33 + string[i]) % tablesize;
+        while (G[key]->VertexID[0] != '\0' || G[key]->ConvRate == del)
+        {
+            // printf("------\n");
+            if ((strcmp(G[key]->VertexID, string) == 0))
+                return key;
+            key++;
+            key = key % tablesize;
+        }
+        return -1;
     }
-    return sum % tablesize;
 }
 void delete_TradeBank(ElemType TradeBank[50], struct AllGraph *list) // deletes a TradeBank
 {
