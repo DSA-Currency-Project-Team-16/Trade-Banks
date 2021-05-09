@@ -151,23 +151,24 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
     int c = 0;
     PtrToGraph tem = list->GraphPtr;
 
-    int key = hash_search(VertexID, tem->GraphIn);
 
-    while (strcmp(tem->TradeBank, TradeBank) != 0)
+    while (strcmp(tem->TradeBank, TradeBank) != 0 && tem->Next != NULL)
     {
         tem = tem->Next;
     }
-    // while (tem != NULL)
-    // {
+    int key = hash_search(VertexID, tem->GraphIn);
+    
     Node *temp = tem->GraphIn[key];
+    printf("   %d\n",key);
     if (temp != NULL)
     {
         c = 1;
         Node *temp1 = temp;
-        Node *tempo = temp->Next, *next;
+        Node *tempo = temp, *next;
         while (temp != NULL)
         {
             int key1 = hash_search(temp->VertexID, tem->GraphIn);
+
             Node *t = tem->GraphOut[key1];
             while (t->Next != NULL)
             {
@@ -180,28 +181,28 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
                 }
                 t = t->Next;
             }
-            // tempo = temp;
             temp = temp->Next;
         }
-        while (tempo != NULL)
+        if (tempo->Next != NULL)
         {
-            next = tempo->Next;
-            free(tempo);
-            tempo = next;
+            tempo = tempo->Next;
+            while (tempo != NULL)
+            {
+                next = tempo->Next;
+                free(tempo);
+                tempo = next;
+            }
         }
-        // free(tempo);
-        // free(temp1); // clears edges directed inwards
         tem->GraphIn[key]->Next = NULL;
-        // free(tem->GraphIn[key]);
         tem->GraphIn[key]->VertexID[0] = '\0';
-        tem->GraphIn[key]->ConvRate = -2;      // these indicates that the node is deleted
+        tem->GraphIn[key]->ConvRate = -2; // these indicates that the node is deleted
     }
     Node *temp2 = tem->GraphOut[key];
     if (temp2->Next != NULL)
     {
         c = 1;
         Node *temp3 = temp2;
-        Node *tempo = temp2->Next, *next;
+        Node *tempo = temp2, *next;
         while (temp2 != NULL)
         {
             int key1 = hash_search(temp2->VertexID, tem->GraphOut);
@@ -220,18 +221,19 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
 
             temp2 = temp2->Next;
         }
-        while (tempo != NULL)
+        if (tempo->Next != NULL)
         {
-            next = tempo->Next;
-            free(tempo);
-            tempo = next;
+            tempo = tempo->Next;
+            while (tempo != NULL)
+            {
+                next = tempo->Next;
+                free(tempo);
+                tempo = next;
+            }
         }
-        // free(tempo);
-        // free(temp3); // clears edges directed outwards
         tem->GraphOut[key]->Next = NULL;
-        // free(tem->GraphOut[key]);
         tem->GraphOut[key]->VertexID[0] = '\0';
-        tem->GraphOut[key]->ConvRate = -2;      // these indicates that the node is deleted
+        tem->GraphOut[key]->ConvRate = -2; // these indicates that the node is deleted
     }
 
     if (c == 0)
@@ -240,7 +242,6 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
     }
     else
     {
-         tem->NumVertex--;
+        tem->NumVertex--;
     }
-    
 }
