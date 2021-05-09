@@ -31,3 +31,4 @@ graphs and prints the path.
 Upon pressing 10, the program prompts the user to enter edgeweight, tradebank, and the currencies and adds the edge to the graph.  
 Upon pressing 11, the program exits.   
  
+Note that, for each case,if the user inputs a value which exceeds the tradebank/currency capacity, it is disallowed.
