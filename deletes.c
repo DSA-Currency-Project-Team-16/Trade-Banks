@@ -190,7 +190,9 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
         // free(tempo);
         // free(temp1); // clears edges directed inwards
         tem->GraphIn[key]->Next = NULL;
-        free(tem->GraphIn[key]);
+        // free(tem->GraphIn[key]);
+        tem->GraphIn[key]->VertexID[0] = '\0';
+        tem->GraphIn[key]->ConvRate = -2;      // these indicates that the node is deleted
     }
     Node *temp2 = tem->GraphOut[key];
     if (temp2->Next != NULL)
@@ -225,13 +227,18 @@ void delete_currency(ElemType TradeBank[50], ElemType VertexID[50], struct AllGr
         // free(tempo);
         // free(temp3); // clears edges directed outwards
         tem->GraphOut[key]->Next = NULL;
-        free(tem->GraphOut[key]);
+        // free(tem->GraphOut[key]);
+        tem->GraphOut[key]->VertexID[0] = '\0';
+        tem->GraphOut[key]->ConvRate = -2;      // these indicates that the node is deleted
     }
-    
+
     if (c == 0)
     {
-        printf(" There is no currency of this name in selected TradeBank  \n ");
+        printf(" There is no currency of this name in any TradeBank  \n ");
     }
     else
-        list->GraphPtr->NumVertex--;
+    {
+         tem->NumVertex--;
+    }
+    
 }
