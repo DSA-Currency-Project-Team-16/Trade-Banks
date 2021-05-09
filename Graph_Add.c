@@ -8,7 +8,7 @@
 int hash_fun(ElemType string[50])     // Hash function maps the given string to a position in the hash table
 {                                     // using Horner's rule and returns the position.              
     int sum = 0;                      // takes name of currency(string) as input
-    int l = strlen(string);
+    int l = strlen(string);           // NOTE: The position it returns may or may not be a vacant position...collision handling is not done by this function
     for (int i = 0; i < l; i++)
     {
         sum = (sum * y + string[i]) % tablesize;
@@ -92,7 +92,7 @@ void InsertNode(ElemType TradeBank[50], ElemType VertexID[50], AllGraph *list)  
             }
             int key = hash_fun(VertexID);
 
-            while (temp->GraphPtr->GraphIn[key]->VertexID[0] != '\0')       // Traversing the hashtable until a vacant position is found
+            while (temp->GraphPtr->GraphIn[key]->VertexID[0] != '\0')       // Traversing the hashtable until a vacant position is found (collision handling)
             {
                 if (key == tablesize - 1)
                     key = 0;
@@ -155,7 +155,7 @@ void InsertEdge(ElemType TradeBank[50], ElemType C1[50], ElemType C2[50], int Co
             t1 = NULL;
             free(t1);
 
-            nodeIn->Next = temp->GraphPtr->GraphIn[key1]->Next;         // Inserts the currency conversion in the linkedlist associated with the source vertex
+            nodeIn->Next = temp->GraphPtr->GraphIn[key1]->Next;         // Inserts the currency conversion in the linkedlist associated with the source vertex 
             temp->GraphPtr->GraphIn[key1]->Next = nodeIn;
             temp->GraphPtr->GraphIn[key1]->ConvRate = 0;
 
