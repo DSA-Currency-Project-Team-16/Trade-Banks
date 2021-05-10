@@ -14,7 +14,8 @@ Press 7 to detect cycle in  graph
 Press 8 to find the second best path    
 Press 9 to find the best path  
 Press 10 to add edge weight manually  
-Press 11 to exit the input programme  
+Press 11 print the graph  
+Press 12 to exit the input programme
 
 If we press 1, for example, the program randomly selects a name from the list of tradebanks and inserts the tradebank.  
 If we press 2, program prompts us to enter the name of a tradebank how many currencies to add. Then it randomly chooses x(the no entered)  
@@ -29,6 +30,7 @@ tradebanks.
 Upon pressing 9, the program asks the user to input the currencies A and B in that order. Then, it finds the shortest path from A to B among all  
 graphs and prints the path.  
 Upon pressing 10, the program prompts the user to enter edgeweight, tradebank, and the currencies and adds the edge to the graph.  
-Upon pressing 11, the program exits.   
+Upon pressing 11 ,the program prints the graph
+Upon pressing 12, the program exits.   
  
 Note that, for each case,if the user inputs a value which exceeds the tradebank/currency capacity, it is disallowed.
