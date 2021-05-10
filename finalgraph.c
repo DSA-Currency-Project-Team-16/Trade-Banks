@@ -835,7 +835,7 @@ int main()
     //     delete_currency("bank3","jerry", A);
     printf("Key for using the file:-\nPress 1 to add a Tradebank\nPress 2 to Add currencies for a given tradebank\nPress 3 to Get conversion rates for each tradebank(Add edge)\n");
     printf("Press 4 to delete a tradebank\nPress 5 to delete currency from a tradebank\nPress 6 to delete a currency conversion rate(edge)\nPress 7 to detect cycle in  graph\n");
-    printf("Press 8 to find the second best path\nPress 9 to find the best path \nPress 10 to add edge weight manually\nPress 11 to exit the input programme\n");
+    printf("Press 8 to find the second best path\nPress 9 to find the best path \nPress 10 to add edge weight manuallyPress 11 print the graph\nPress 12 to exit the input programme\n");
     gettimeofday(&t1, NULL);
     srand((t1.tv_sec * t1.tv_usec));
     int x = 0;
