@@ -30,7 +30,7 @@ tradebanks.
 Upon pressing 9, the program asks the user to input the currencies A and B in that order. Then, it finds the shortest path from A to B among all  
 graphs and prints the path.  
 Upon pressing 10, the program prompts the user to enter edgeweight, tradebank, and the currencies and adds the edge to the graph.  
-Upon pressing 11 ,the program prints the graph
+Upon pressing 11 ,the program prints the graph  
 Upon pressing 12, the program exits.   
  
 Note that, for each case,if the user inputs a value which exceeds the tradebank/currency capacity, it is disallowed.
