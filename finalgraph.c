@@ -1075,6 +1075,7 @@ int hash(ElemType string[50], PtrToNext *G) //linear probing
         return -1;
     }
 }
+/* The Dijkstra algo uses a binary heap to represent the Priority queue. It traverses the graph, starting from the source. It considers the vertex with topmost priority currently in the heap, removes it from the heap and updates the shortest distance of all of its neighbours. It continues to do so until the destination vertex is encountered. */
 PathPtr Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int NumVertices, int flag, long long *MinDist)
 {
     //Dijkstra Heap implementation code
@@ -1214,7 +1215,7 @@ PathPtr Dijkstra(PtrToNext *AdjList, ElemType Source[], ElemType Dest[], int Num
     FreeHeap(Heap, NumVertices);
     return Path;
 }
-
+/* This algorithm takes the Ptr to all tradebanks, source and the destination currencies as the parameters. It calculates the shortest distance of every Tradebank using Dijkstra's algo and prints the minimum path among all.*/
 void ShortestPath(struct AllGraph *Pointer, ElemType Source[], ElemType Dest[])
 {
     PtrToGraph CurrBank = Pointer->GraphPtr; //points to current tradebank
