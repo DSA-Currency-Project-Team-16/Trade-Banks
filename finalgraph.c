@@ -338,6 +338,7 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
     int n = list->NumBanks;
     int c = 0;
     PtrToGraph temp = list->GraphPtr;
+
     while (temp != NULL)
     {
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
@@ -348,7 +349,23 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
                 printf("Edge does not exist!\n");
                 return NULL;
             }
-            else if (key2 != -1)
+
+            PtrToNext p = list->GraphPtr->GraphIn[hash_search(origin, temp->GraphIn)];
+            for (;;)
+            {
+                if (p == NULL)
+                {
+                    printf("Edge does not exist\n");
+                    return NULL;
+                }
+                if (strcmp(p->VertexID, destiny) == 0)
+                {
+                    break;
+                }
+                p = p->Next;
+            }
+
+            if (key2 != -1)
             {
                 Node *temp2 = temp->GraphOut[key2];
                 Node *prev, *prev3;
@@ -774,61 +791,61 @@ int main()
     AllGraph *A = malloc(sizeof(A)); //the allgraph variable which contains the whole graph
     A->NumBanks = 0;
     //TEST CASES PLEASE DELETE
-    AddGraph("bank1", A);
-    InsertNode("bank1", "abc", A);
-    InsertNode("bank1", "def", A);
-    InsertNode("bank1", "ghi", A);
-    InsertNode("bank1", "jkl", A);
-    InsertNode("bank1", "mno", A);
-    InsertNode("bank1", "pqr", A);
-    InsertEdge("bank1", "abc", "ghi", 3, A);
-    InsertEdge("bank1", "ghi", "pqr", 7, A);
-    InsertEdge("bank1", "mno", "jkl", 1, A);
-    InsertEdge("bank1", "pqr", "abc", 8, A);
-    AddGraph("bank2", A);
-    InsertNode("bank2", "srija", A);
-    InsertNode("bank2", "divya", A);
-    InsertNode("bank2", "keerthana", A);
-    InsertNode("bank2", "amara", A);
-    InsertNode("bank2", "kavya", A);
-    InsertNode("bank2", "nikki", A);
-    InsertNode("bank2", "shriya", A);
-    InsertEdge("bank2", "divya", "amara", 509, A);
-    InsertEdge("bank2", "amara", "srija", 24, A);
-    InsertEdge("bank2", "kavya", "nikki", 100, A);
-    InsertEdge("bank2", "srija", "shriya", 4574, A);
-    InsertEdge("bank2", "srija", "divya", 1389, A);
-    //InsertEdge("bank2", "srija", "keerthana", 94958, A);
-    InsertEdge("bank2", "srija", "amara", 949, A);
-    InsertEdge("bank2", "amara", "keerthana", 949, A);
-    AddGraph("bank3", A);
-    InsertNode("bank3", "cat", A);
-    InsertNode("bank3", "rat", A);
-    InsertNode("bank3", "tom", A);
-    InsertNode("bank3", "jerry", A);
-    InsertNode("bank3", "jerry", A);
-    InsertEdge("bank3", "cat", "tom", 57878, A);
-    InsertEdge("bank3", "rat", "jerry", 4385, A);
-    AddGraph("string", A);
-    InsertNode("string", "a", A);
-    InsertNode("string", "b", A);
-    InsertNode("string", "c", A);
-    InsertNode("string", "d", A);
-    InsertNode("string", "e", A);
-    InsertNode("string", "f", A);
-    InsertNode("string", "g", A);
-    InsertNode("string", "h", A);
-    InsertEdge("string", "e", "b", 1, A);
-    InsertEdge("string", "b", "c", 12, A);
-    InsertEdge("string", "e", "b", 123, A);
-    InsertEdge("string", "a", "e", 1, A);
-    InsertEdge("string", "e", "f", 1, A);
-    InsertEdge("string", "f", "a", 1, A);
-    InsertEdge("string", "e", "h", 1, A);
-    InsertEdge("string", "h", "e", 123, A);
-    InsertEdge("string", "a", "c", 1234, A);
-    InsertEdge("string", "c", "h", 12, A);
-    InsertEdge("string", "d", "a", 1, A);
+    // AddGraph("bank1", A);
+    // InsertNode("bank1", "abc", A);
+    // InsertNode("bank1", "def", A);
+    // InsertNode("bank1", "ghi", A);
+    // InsertNode("bank1", "jkl", A);
+    // InsertNode("bank1", "mno", A);
+    // InsertNode("bank1", "pqr", A);
+    // InsertEdge("bank1", "abc", "ghi", 3, A);
+    // InsertEdge("bank1", "ghi", "pqr", 7, A);
+    // InsertEdge("bank1", "mno", "jkl", 1, A);
+    // InsertEdge("bank1", "pqr", "abc", 8, A);
+    // AddGraph("bank2", A);
+    // InsertNode("bank2", "srija", A);
+    // InsertNode("bank2", "divya", A);
+    // InsertNode("bank2", "keerthana", A);
+    // InsertNode("bank2", "amara", A);
+    // InsertNode("bank2", "kavya", A);
+    // InsertNode("bank2", "nikki", A);
+    // InsertNode("bank2", "shriya", A);
+    // InsertEdge("bank2", "divya", "amara", 509, A);
+    // InsertEdge("bank2", "amara", "srija", 24, A);
+    // InsertEdge("bank2", "kavya", "nikki", 100, A);
+    // InsertEdge("bank2", "srija", "shriya", 4574, A);
+    // InsertEdge("bank2", "srija", "divya", 1389, A);
+    // //InsertEdge("bank2", "srija", "keerthana", 94958, A);
+    // InsertEdge("bank2", "srija", "amara", 949, A);
+    // InsertEdge("bank2", "amara", "keerthana", 949, A);
+    // AddGraph("bank3", A);
+    // InsertNode("bank3", "cat", A);
+    // InsertNode("bank3", "rat", A);
+    // InsertNode("bank3", "tom", A);
+    // InsertNode("bank3", "jerry", A);
+    // InsertNode("bank3", "jerry", A);
+    // InsertEdge("bank3", "cat", "tom", 57878, A);
+    // InsertEdge("bank3", "rat", "jerry", 4385, A);
+    // AddGraph("string", A);
+    // InsertNode("string", "a", A);
+    // InsertNode("string", "b", A);
+    // InsertNode("string", "c", A);
+    // InsertNode("string", "d", A);
+    // InsertNode("string", "e", A);
+    // InsertNode("string", "f", A);
+    // InsertNode("string", "g", A);
+    // InsertNode("string", "h", A);
+    // InsertEdge("string", "e", "b", 1, A);
+    // InsertEdge("string", "b", "c", 12, A);
+    // InsertEdge("string", "e", "b", 123, A);
+    // InsertEdge("string", "a", "e", 1, A);
+    // InsertEdge("string", "e", "f", 1, A);
+    // InsertEdge("string", "f", "a", 1, A);
+    // InsertEdge("string", "e", "h", 1, A);
+    // InsertEdge("string", "h", "e", 123, A);
+    // InsertEdge("string", "a", "c", 1234, A);
+    // InsertEdge("string", "c", "h", 12, A);
+    // InsertEdge("string", "d", "a", 1, A);
 
     //     PrintGraph(*A);
     //     delete_currency("bank3","tom", A);
@@ -1618,7 +1635,6 @@ long long Second_Shortest_Conversion(TradeBankListPtr ListOfTradeBanks, char *Cu
         else if (MinConversionCosts[index] == ShortestPathLength)
         {
             NoOfTradeBanksMinCost++;
-            //printf("--2--\n");
         }
         else if ((MinConversionCosts[index] > ShortestPathLength) && (MinConversionCosts[index] < SecondShortestCost))
         {
@@ -1673,7 +1689,7 @@ long long Second_Shortest_Conversion(TradeBankListPtr ListOfTradeBanks, char *Cu
     }
     else
     {
-        printf("2\n");
+
         if (SecondMinTradeBank == NULL)
         {
             printf("No path found\n");
