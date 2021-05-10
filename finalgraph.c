@@ -338,7 +338,6 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
     int n = list->NumBanks;
     int c = 0;
     PtrToGraph temp = list->GraphPtr;
-
     while (temp != NULL)
     {
         if (strcmp(temp->TradeBank, TradeBank) == 0) // checks whether matches to given TradeBank or not
@@ -349,31 +348,30 @@ PtrToNext delete_edge(ElemType TradeBank[50], ElemType origin[50], ElemType dest
                 printf("Edge does not exist!\n");
                 return NULL;
             }
-
-            PtrToNext p = list->GraphPtr->GraphIn[hash_search(origin, temp->GraphIn)];
-            for (;;)
-            {
-                if (p == NULL)
-                {
-                    printf("Edge does not exist\n");
-                    return NULL;
-                }
-                if (strcmp(p->VertexID, destiny) == 0)
-                {
-                    break;
-                }
-                p = p->Next;
-            }
-
-            if (key2 != -1)
+            else
             {
                 Node *temp2 = temp->GraphOut[key2];
                 Node *prev, *prev3;
-                while (strcmp(temp2->VertexID, origin) != 0 && temp2 != NULL)
+                if(temp2 == NULL)
                 {
-                    c = 1;
-                    prev = temp2;
-                    temp2 = temp2->Next;
+                    printf("Edge does not exist!\n");
+                    return NULL;
+                }
+                while (temp2 != NULL)
+                {
+                    if(strcmp(temp2->VertexID, origin) != 0 )
+                    {
+                        c = 1;
+                        prev = temp2;
+                        temp2 = temp2->Next;
+                    }
+                    else
+                        break;
+                }
+                if(temp2 == NULL)
+                {
+                    printf("Edge does not exist!\n");
+                    return NULL;
                 }
                 if (strcmp(temp2->VertexID, origin) == 0)
                 {
@@ -1550,7 +1548,7 @@ PathPtr Second_Shortest_Path_Of_Graph(PtrToGraph TradeBank, char *Currency1, cha
     PathPtr P = Dijkstra(TradeBank->GraphIn, Currency1, Currency2, TradeBank->NumVertex, -1, &cost);
     PathPtr clearpath = P;
     PathPtr returnpath;
-    PathPtr finalpath;
+    PathPtr finalpath = NULL;
 
     if (P == NULL)
         return NULL;
